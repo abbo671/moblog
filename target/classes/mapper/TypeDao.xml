@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mo.moblog.dao.TypeDao">
+
+    <insert id="saveType" parameterType="com.mo.moblog.pojo.Type">
+        insert into type values (#{id},#{name});
+    </insert>
+
+    <select id="getAllType" resultType="com.mo.moblog.pojo.Type">
+        select * from type
+    </select>
+
+    <select id="getTypeById" resultType="com.mo.moblog.pojo.Type">
+        select id,name from type where id=#{id};
+    </select>
+
+    <resultMap id="typeBlogResultMap" type="com.mo.moblog.pojo.Type">
+        <id property="id" column="tid"/>
+        <result property="name" column="name"/>
+        <collection property="blogs" javaType="list" ofType="Blog">
+            <id property="id" column="bid"/>
+            <result property="title" column="title"/>
+            <result property="type_id" column="type_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAllTypeAndBlog" resultMap="typeBlogResultMap">
+        select t.id,name,b.id,title,type_id from type t left join blog b on t.id = b.type_id;
+    </select>
+
+    <select id="getTypeByName" resultType="com.mo.moblog.pojo.Type">
+        select * from type where name=#{name};
+    </select>
+
+    <update id="updateType" parameterType="com.mo.moblog.pojo.Type">
+        update type set name=#{name} where id=#{id};
+    </update>
+
+    <delete id="deleteType" >
+        delete from type where id = #{id}
+    </delete>
+</mapper>
